@@ -1,5 +1,6 @@
 import os
 from datetime import datetime as dt
+from time import sleep
 
 import requests
 import psycopg2
@@ -13,6 +14,7 @@ db_pass = os.getenv("DB_PASS")
 db_host = os.getenv("DB_HOST")
 db_port = os.getenv("DB_PORT")
 db = os.getenv("DB")
+freq = int(os.getenv("QUERY_FREQUENCY"))
 
 
 def _get_data():
@@ -72,14 +74,18 @@ def _store_data(data):
         );
     """
     connect_string = f'host={db_host} port={db_port} user={db_user} password={db_pass} dbname={db}'
-
-    with psycopg2.connect(connect_string) as conn:
-        cur = conn.cursor()
-        cur.execute(query)
-        cur.close()
-        conn.commit()
+    try:
+        with psycopg2.connect(connect_string) as conn:
+            cur = conn.cursor()
+            cur.execute(query)
+            cur.close()
+            conn.commit()
+    except:
+        pass
 
 
 if __name__ == '__main__':
-    data = _get_data()
-    _store_data(data)
+    while True:
+        data = _get_data()
+        _store_data(data)
+        sleep(freq)
