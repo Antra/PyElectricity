@@ -10,7 +10,7 @@
                     "E_Total": 453617, // AC energy (Wh) since ever
                     "E_Year": 453617, // AC energy (Wh) since this year
                     "P": 569, // current effect in watt (positive is produced/exporting, negative is consuing/importing) - abs sum of P_Load+P_Grid?
-                    "SOC": 75.5 // battery level
+                    "SOC": 75.5 // battery level; NB, recommendation is to keep the battery within 12%-98% SoC, so normalised percentage: (X-12)*100/86 %
                 }
             },
             "Site": {
@@ -24,8 +24,8 @@
                 "P_Grid": 27.100000000000001, // effect to/from grid (positive is from grid, negative is to grid)
                 "P_Load": -596.10000000000002, // effect used in local net (negative is consuming, positive is generating)
                 "P_PV": 7.8180000000000005, // effect from solar panels (positive is production)
-                "rel_Autonomy": 95.453782922328472,
-                "rel_SelfConsumption": 100 // percentage of self-consumption
+                "rel_Autonomy": 95.453782922328472, // self-sufficiency(how much power is self-supplied (not imported))
+                "rel_SelfConsumption": 100 // self-consumption(how much PV power is being at home (not exported))
             },
             "Version": "12"
         }
