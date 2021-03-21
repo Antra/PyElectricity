@@ -106,6 +106,9 @@ def _store_data(data):
 
 if __name__ == '__main__':
     while True:
-        data = _get_data()
-        _store_data(data)
-        sleep(freq)
+        try:
+            data = _get_data()
+            _store_data(data)
+            sleep(freq)
+        except Exception as err:
+            logger.error(f'Outer loop failed: {err.message}')
