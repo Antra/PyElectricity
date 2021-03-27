@@ -37,30 +37,31 @@ def _get_data():
     data = {}
     try:
         response = requests.get(url).json()
-        # effect to/from battery(positive is discharge, negative is charge)
-        data['p_akku'] = response['Body']['Data']['Site']['P_Akku']
-        # effect to/from grid(positive is from grid, negative is to grid)
-        data['p_grid'] = response['Body']['Data']['Site']['P_Grid']
-        # effect used in local net(negative is consuming, positive is generating)
-        data['p_load'] = response['Body']['Data']['Site']['P_Load']
-        # effect from solar panels(positive is production)
-        data['p_pv'] = response['Body']['Data']['Site']['P_PV']
-        # self-consumption(how much PV power is being at home (not exported))
-        data['rel_self'] = response['Body']['Data']['Site']['rel_SelfConsumption']
-        # self-sufficiency(how much power is self-supplied (not imported))
-        data['rel_auto'] = response['Body']['Data']['Site']['rel_Autonomy']
-        # current effect in watt (positive is produced/exporting, negative is consuing/importing) - abs sum of P_Load+P_Grid?
-        data['p'] = response['Body']['Data']['Inverters']['1']['P']
-        # battery level; NB, recommendation is to keep the battery within 12%-98% SoC
-        data['soc'] = response['Body']['Data']['Inverters']['1']['SOC']
-        # battery level, normalised percentage: (SOC-12)*100/86 %
-        data['soc_normal'] = round((data['soc']-12)*100/86, 1)
-        # tz-aware timestamp of recording
-        date_format = '%Y-%m-%dT%H:%M:%S%z'
-        data['timestamp'] = dt.strptime(
-            response['Head']['Timestamp'], date_format)
-        logger.debug(f'Fetched some data from the inverter: {data}')
-        return data
+        if response:
+            # effect to/from battery(positive is discharge, negative is charge)
+            data['p_akku'] = response['Body']['Data']['Site']['P_Akku']
+            # effect to/from grid(positive is from grid, negative is to grid)
+            data['p_grid'] = response['Body']['Data']['Site']['P_Grid']
+            # effect used in local net(negative is consuming, positive is generating)
+            data['p_load'] = response['Body']['Data']['Site']['P_Load']
+            # effect from solar panels(positive is production)
+            data['p_pv'] = response['Body']['Data']['Site']['P_PV']
+            # self-consumption(how much PV power is being at home (not exported))
+            data['rel_self'] = response['Body']['Data']['Site']['rel_SelfConsumption']
+            # self-sufficiency(how much power is self-supplied (not imported))
+            data['rel_auto'] = response['Body']['Data']['Site']['rel_Autonomy']
+            # current effect in watt (positive is produced/exporting, negative is consuing/importing) - abs sum of P_Load+P_Grid?
+            data['p'] = response['Body']['Data']['Inverters']['1']['P']
+            # battery level; NB, recommendation is to keep the battery within 12%-98% SoC
+            data['soc'] = response['Body']['Data']['Inverters']['1']['SOC']
+            # battery level, normalised percentage: (SOC-12)*100/86 %
+            data['soc_normal'] = round((data['soc']-12)*100/86, 1)
+            # tz-aware timestamp of recording
+            date_format = '%Y-%m-%dT%H:%M:%S%z'
+            data['timestamp'] = dt.strptime(
+                response['Head']['Timestamp'], date_format)
+            logger.debug(f'Fetched some data from the inverter: {data}')
+            return data
     except Exception as err:
         logger.error(
             f'Error getting data from the inverter! Error message: {err.message}')
@@ -101,7 +102,7 @@ def _store_data(data):
             conn.commit()
     except Exception as err:
         logger.error(
-            f'Error saving to database! Error message: {err.message}')
+            f'** Error saving to database! Error message: {err} **')
 
 
 if __name__ == '__main__':
@@ -111,4 +112,4 @@ if __name__ == '__main__':
             _store_data(data)
             sleep(freq)
         except Exception as err:
-            logger.error(f'Outer loop failed: {err.message}')
+            logger.error(f'** Outer loop failed: {err} **')
