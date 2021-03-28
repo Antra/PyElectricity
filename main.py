@@ -39,23 +39,23 @@ def _get_data():
         response = requests.get(url).json()
         if response:
             # effect to/from battery(positive is discharge, negative is charge)
-            data['p_akku'] = response['Body']['Data']['Site']['P_Akku']
+            data['p_akku'] = response['Body']['Data']['Site']['P_Akku'] or ''
             # effect to/from grid(positive is from grid, negative is to grid)
-            data['p_grid'] = response['Body']['Data']['Site']['P_Grid']
+            data['p_grid'] = response['Body']['Data']['Site']['P_Grid'] or ''
             # effect used in local net(negative is consuming, positive is generating)
-            data['p_load'] = response['Body']['Data']['Site']['P_Load']
+            data['p_load'] = response['Body']['Data']['Site']['P_Load'] or ''
             # effect from solar panels(positive is production)
-            data['p_pv'] = response['Body']['Data']['Site']['P_PV']
+            data['p_pv'] = response['Body']['Data']['Site']['P_PV'] or ''
             # self-consumption(how much PV power is being at home (not exported))
-            data['rel_self'] = response['Body']['Data']['Site']['rel_SelfConsumption']
+            data['rel_self'] = response['Body']['Data']['Site']['rel_SelfConsumption'] or ''
             # self-sufficiency(how much power is self-supplied (not imported))
-            data['rel_auto'] = response['Body']['Data']['Site']['rel_Autonomy']
+            data['rel_auto'] = response['Body']['Data']['Site']['rel_Autonomy'] or ''
             # current effect in watt (positive is produced/exporting, negative is consuing/importing) - abs sum of P_Load+P_Grid?
-            data['p'] = response['Body']['Data']['Inverters']['1']['P']
+            data['p'] = response['Body']['Data']['Inverters']['1']['P'] or ''
             # battery level; NB, recommendation is to keep the battery within 12%-98% SoC
-            data['soc'] = response['Body']['Data']['Inverters']['1']['SOC']
+            data['soc'] = response['Body']['Data']['Inverters']['1']['SOC'] or ''
             # battery level, normalised percentage: (SOC-12)*100/86 %
-            data['soc_normal'] = round((data['soc']-12)*100/86, 1)
+            data['soc_normal'] = round((data['soc']-12)*100/86, 1) or ''
             # tz-aware timestamp of recording
             date_format = '%Y-%m-%dT%H:%M:%S%z'
             data['timestamp'] = dt.strptime(
