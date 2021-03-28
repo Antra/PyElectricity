@@ -39,23 +39,23 @@ def _get_data():
         response = requests.get(url).json()
         if response:
             # effect to/from battery(positive is discharge, negative is charge)
-            data['p_akku'] = response['Body']['Data']['Site']['P_Akku'] or ''
+            data['p_akku'] = response['Body']['Data']['Site']['P_Akku'] or 0
             # effect to/from grid(positive is from grid, negative is to grid)
-            data['p_grid'] = response['Body']['Data']['Site']['P_Grid'] or ''
+            data['p_grid'] = response['Body']['Data']['Site']['P_Grid'] or 0
             # effect used in local net(negative is consuming, positive is generating)
-            data['p_load'] = response['Body']['Data']['Site']['P_Load'] or ''
+            data['p_load'] = response['Body']['Data']['Site']['P_Load'] or 0
             # effect from solar panels(positive is production)
-            data['p_pv'] = response['Body']['Data']['Site']['P_PV'] or ''
+            data['p_pv'] = response['Body']['Data']['Site']['P_PV'] or 0
             # self-consumption(how much PV power is being at home (not exported))
-            data['rel_self'] = response['Body']['Data']['Site']['rel_SelfConsumption'] or ''
+            data['rel_self'] = response['Body']['Data']['Site']['rel_SelfConsumption'] or 0
             # self-sufficiency(how much power is self-supplied (not imported))
-            data['rel_auto'] = response['Body']['Data']['Site']['rel_Autonomy'] or ''
+            data['rel_auto'] = response['Body']['Data']['Site']['rel_Autonomy'] or 0
             # current effect in watt (positive is produced/exporting, negative is consuing/importing) - abs sum of P_Load+P_Grid?
-            data['p'] = response['Body']['Data']['Inverters']['1']['P'] or ''
+            data['p'] = response['Body']['Data']['Inverters']['1']['P'] or 0
             # battery level; NB, recommendation is to keep the battery within 12%-98% SoC
-            data['soc'] = response['Body']['Data']['Inverters']['1']['SOC'] or ''
+            data['soc'] = response['Body']['Data']['Inverters']['1']['SOC'] or 0
             # battery level, normalised percentage: (SOC-12)*100/86 %
-            data['soc_normal'] = round((data['soc']-12)*100/86, 1) or ''
+            data['soc_normal'] = round((data['soc']-12)*100/86, 1) or 0
             # tz-aware timestamp of recording
             date_format = '%Y-%m-%dT%H:%M:%S%z'
             data['timestamp'] = dt.strptime(
@@ -64,7 +64,7 @@ def _get_data():
             return data
     except Exception as err:
         logger.error(
-            f'Error getting data from the inverter! Error message: {err.message}')
+            f'Error getting data from the inverter! Error message: {err}')
 
 
 def _store_data(data):
@@ -102,7 +102,7 @@ def _store_data(data):
             conn.commit()
     except Exception as err:
         logger.error(
-            f'** Error saving to database! Error message: {err} **')
+            f'** Error saving to database! Error message: {err} ** trying to save {query} **')
 
 
 if __name__ == '__main__':
