@@ -67,18 +67,16 @@ def _get_data():
         logger.error(
             f'Error getting data from the inverter! Error message: {err}')
         empty_reponse = {
-            'data': {
-                'timestamp': None,
-                'p_akku': None,
-                'p_grid': None,
-                'p_load': None,
-                'p_pv': None,
-                'rel_self': None,
-                'rel_auto': None,
-                'p': None,
-                'soc': None,
-                'soc_normal': None
-            }
+            'timestamp': None,
+            'p_akku': None,
+            'p_grid': None,
+            'p_load': None,
+            'p_pv': None,
+            'rel_self': None,
+            'rel_auto': None,
+            'p': None,
+            'soc': None,
+            'soc_normal': None
         }
         return empty_reponse
 
