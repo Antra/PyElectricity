@@ -106,10 +106,13 @@ def _store_data(data):
 
 
 if __name__ == '__main__':
-    while True:
+    counter = 0
+    # My Raspberry Pi dislikes the script for hours and hours, so re-running it every 5 mins instead
+    while counter <= 60*freq:
         try:
             data = _get_data()
             _store_data(data)
             sleep(freq)
         except Exception as err:
             logger.error(f'** Outer loop failed: {err} **')
+        counter += 1
