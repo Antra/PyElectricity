@@ -117,3 +117,4 @@ if __name__ == '__main__':
         except Exception as err:
             logger.error(f'** Outer loop failed: {err} **')
         counter += 1
+    logger.info('*** PyElectricity terminating ***')
