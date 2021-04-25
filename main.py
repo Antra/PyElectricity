@@ -30,6 +30,7 @@ db_host = os.getenv("DB_HOST")
 db_port = os.getenv("DB_PORT")
 db = os.getenv("DB")
 freq = int(os.getenv("QUERY_FREQUENCY"))
+threshold = int(os.getenv("THRESHOLD"))
 
 
 def _get_data():
@@ -107,8 +108,8 @@ def _store_data(data):
 
 if __name__ == '__main__':
     counter = 0
-    # My Raspberry Pi dislikes the script for hours and hours, so re-running it every 5 mins instead
-    while counter <= 60*freq:
+    # My Raspberry Pi dislikes the script for hours and hours, so re-running it every X mins instead
+    while counter <= threshold:
         try:
             data = _get_data()
             _store_data(data)
