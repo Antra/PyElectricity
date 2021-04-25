@@ -66,6 +66,21 @@ def _get_data():
     except Exception as err:
         logger.error(
             f'Error getting data from the inverter! Error message: {err}')
+        empty_reponse = {
+            'data': {
+                'timestamp': None,
+                'p_akku': None,
+                'p_grid': None,
+                'p_load': None,
+                'p_pv': None,
+                'rel_self': None,
+                'rel_auto': None,
+                'p': None,
+                'soc': None,
+                'soc_normal': None
+            }
+        }
+        return empty_reponse
 
 
 def _store_data(data):
@@ -96,11 +111,15 @@ def _store_data(data):
     """
     connect_string = f'host={db_host} port={db_port} user={db_user} password={db_pass} dbname={db}'
     try:
-        with psycopg2.connect(connect_string) as conn:
-            cur = conn.cursor()
-            cur.execute(query)
-            cur.close()
-            conn.commit()
+        if data['timestamp']:
+            with psycopg2.connect(connect_string) as conn:
+                cur = conn.cursor()
+                cur.execute(query)
+                cur.close()
+                conn.commit()
+        else:
+            logger.error(
+                f'** Error saving the following to the database: {data} **')
     except Exception as err:
         logger.error(
             f'** Error saving to database! Error message: {err} ** trying to save {query} **')
