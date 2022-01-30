@@ -1,0 +1,7 @@
+*.pbix
+.env
+*.bat
+venv/
+.vscode/
+*.log
+*.json

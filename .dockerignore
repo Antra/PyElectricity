@@ -1,0 +1,12 @@
+*.pbix
+.env
+*.md
+*.bat
+sql/
+venv/
+.vscode/
+*.log
+*.json
+.dockerignore
+.git/
+Dockerfile

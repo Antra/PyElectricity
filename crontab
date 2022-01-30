@@ -1,0 +1,7 @@
+SHELL=/bin/bash
+BASH_ENV=/etc/environment
+# solar panels
+*/5 * * * * /usr/local/bin/python3 /app/solar_panels.py >>/app/pyelectricity.log 2>&1
+# electricity prices
+@reboot sleep 30 && /usr/local/bin/python3 /app/power_prices.py >>/app/pyelectricity.log 2>&1
+13 * * * * /usr/local/bin/python3 /app/power_prices.py >>/app/pyelectricity.log 2>&1
