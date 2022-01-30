@@ -10,6 +10,8 @@ My setup consists of:
 - `PostgreSQL 13` (database running via Docker)
 - `Raspberry Pi 3b+` (executing the scripts, runs Raspbian Linux)
 
+Currently, I am using PowerBI for visualisation/dasboarding; I am not certain if that will be the permanent setup or if I should create some visualisations (e.g. as png) and embed to a website.
+
 # Setup
 There are two scripts `solar_panels.py`, which will record data from the Fronius inverter and store it to a DB, and `power_prices.py`, which will grab power price data from Nordpool and store it to a DB.  
 They're running in a Docker setup, and expect the following environment variables:
