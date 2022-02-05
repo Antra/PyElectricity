@@ -1,36 +1,13 @@
-import os
 from datetime import datetime as dt
 from time import sleep
-import logging
-from logging.handlers import RotatingFileHandler
 
 import requests
-import psycopg2
-from dotenv import load_dotenv
 
-# Get the basic logging set up
-logger = logging.getLogger(__name__)
-log_folder = os.path.dirname(os.path.abspath(__file__))
-log_file = os.path.join(log_folder, 'pyelectricity.log')
-logger.setLevel(logging.INFO)
-file_handler = RotatingFileHandler(log_file, maxBytes=102400, backupCount=2)
-formatter = logging.Formatter(
-    '%(asctime)s %(levelname)s: %(message)s', '%Y-%m-%d %H:%M:%S')
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
+from config import setup_logger, get_connection, inverter_ip, freq, threshold
 
-logger.info('*** PyElectricity starting ***')
 
-load_dotenv()
-
-inverter_ip = os.getenv("INVERTERIP")
-db_user = os.getenv("DB_USER")
-db_pass = os.getenv("DB_PASS")
-db_host = os.getenv("DB_HOST")
-db_port = os.getenv("DB_PORT")
-db = os.getenv("DB")
-freq = int(os.getenv("QUERY_FREQUENCY"))
-threshold = int(os.getenv("THRESHOLD"))
+logger = setup_logger('Power', level='INFO')
+logger.info('*** PyElectricity: Solar starting ***')
 
 
 def _get_data():
@@ -61,11 +38,11 @@ def _get_data():
             date_format = '%Y-%m-%dT%H:%M:%S%z'
             data['timestamp'] = dt.strptime(
                 response['Head']['Timestamp'], date_format)
-            logger.debug(f'Fetched some data from the inverter: {data}')
+            logger.debug(f'Solar: Fetched some data from the inverter: {data}')
             return data
     except Exception as err:
         logger.error(
-            f'Error getting data from the inverter! Error message: {err}')
+            f'Solar: Error getting data from the inverter! Error message: {err}')
         empty_reponse = {
             'timestamp': None,
             'p_akku': None,
@@ -107,20 +84,20 @@ def _store_data(data):
             {data['soc_normal']}
         );
     """
-    connect_string = f'host={db_host} port={db_port} user={db_user} password={db_pass} dbname={db}'
     try:
         if data['timestamp']:
-            with psycopg2.connect(connect_string) as conn:
+            with get_connection() as conn:
                 cur = conn.cursor()
                 cur.execute(query)
                 cur.close()
                 conn.commit()
+            logger.debug(f'Solar: Data written do DB: {data}')
         else:
             logger.error(
-                f'** Error saving the following to the database: {data} **')
+                f'** Solar: Error saving the following to the database: {data} **')
     except Exception as err:
         logger.error(
-            f'** Error saving to database! Error message: {err} ** trying to save {query} **')
+            f'** Solar: Error saving to database! Error message: {err} ** trying to save {query} **')
 
 
 if __name__ == '__main__':
@@ -132,6 +109,6 @@ if __name__ == '__main__':
             _store_data(data)
             sleep(freq)
         except Exception as err:
-            logger.error(f'** Outer loop failed: {err} **')
+            logger.error(f'** Solar: Outer loop failed: {err} **')
         counter += 1
-    logger.info('*** PyElectricity terminating ***')
+    logger.info('*** PyElectricity: Solar terminating ***')
