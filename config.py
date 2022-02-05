@@ -16,9 +16,11 @@ db = os.getenv("DB")
 inverter_ip = os.getenv("INVERTERIP")
 freq = int(os.getenv("QUERY_FREQUENCY"))
 threshold = int(os.getenv("THRESHOLD"))
+weather_api_key = os.getenv("WEATHER_API")
+latitude = os.getenv("WEATHER_LAT")
+longitude = os.getenv("WEATHER_LON")
 
 TIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
-
 
 loggers = {}
 connect_string = f'host={db_host} port={db_port} user={db_user} password={db_pass} dbname={db}'
