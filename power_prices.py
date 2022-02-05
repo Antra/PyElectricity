@@ -37,8 +37,9 @@ df['currency'] = currency
 
 try:
     engine = get_engine()
-    # delete what we have in the dataframe plus anything older than 7 days
-    delete_query = f"""DELETE FROM price_data WHERE timestamp IN {tuple(df.index.strftime(TIME_FORMAT))} OR timestamp < '{(dt.now()).strftime(TIME_FORMAT)}'"""
+    # delete what we have in the dataframe -- plus anything older than 7 days?
+    # delete_query = f"""DELETE FROM price_data WHERE timestamp IN {tuple(df.index.strftime(TIME_FORMAT))} OR timestamp < '{(dt.now()).strftime(TIME_FORMAT)}'"""
+    delete_query = f"""DELETE FROM price_data WHERE timestamp IN {tuple(df.index.strftime(TIME_FORMAT))}"""
     with engine.connect() as conn:
         conn.execute(delete_query)
 
