@@ -3,9 +3,6 @@ FROM python:3.9-slim-bullseye
 # I can pass the environmental files in directly in the Dockerfile even if the password contains special characters; but I can also use the run command from Readme.
 # ENV DB_HOST 192.168.x.x
 # ENV DB_PORT 5432
-# ENV DB_USER user
-# ENV DB_PASS '"CP.!@X_2.Y|6D6u'
-# ENV DB db
 
 RUN apt-get update && apt install -y libpq-dev gcc cron git
 
