@@ -6,7 +6,7 @@ import requests
 from config import setup_logger, get_connection, inverter_ip, freq, threshold
 
 
-logger = setup_logger('Power', level='INFO')
+logger = setup_logger('Solar', level='INFO')
 logger.info('*** PyElectricity: Solar starting ***')
 
 
