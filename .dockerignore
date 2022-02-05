@@ -11,3 +11,4 @@ venv/
 .git/
 Dockerfile
 docs/
+__pycache__/
