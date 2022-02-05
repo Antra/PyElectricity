@@ -8,6 +8,7 @@ venv/
 *.log
 *.json
 .dockerignore
+.gitignore
 .git/
 Dockerfile
 docs/
