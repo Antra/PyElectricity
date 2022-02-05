@@ -43,8 +43,8 @@ try:
     with engine.connect() as conn:
         conn.execute(delete_query)
 
-    # and insert the dataframe keeping on the future prices
-    df = df[df.index > (dt.now() - timedelta(hours=1)).strftime(TIME_FORMAT)]
+    # and insert the dataframe keeping on the future prices -- removed to do time analysis
+    #df = df[df.index > (dt.now() - timedelta(hours=1)).strftime(TIME_FORMAT)]
     df.to_sql('price_data', engine, if_exists='append',
               index=True, index_label='timestamp')
     logger.debug(f'Power: Write some data to the DB, {df.shape[0]} rows')
