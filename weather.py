@@ -28,16 +28,19 @@ def get_weather_data(API_BASE_URL, weather_api_key, latitude, longitude):
             hourly['dt'] = pd.to_datetime(hourly['dt'], unit='s').dt.tz_localize(
                 'UTC').dt.tz_convert(timezone)
             hourly = pd.concat(
-                [hourly.drop(['weather', 'rain'], axis=1),
+                [hourly.drop(['weather'], axis=1),
                  pd.DataFrame(hourly.weather.tolist(), index=hourly.index)[
-                    0].apply(pd.Series),
-                 hourly['rain'].apply(pd.Series)
-                 ], axis=1).rename(columns={'1h': 'rain'}).drop(columns=0)
-            hourly = pd.concat(
-                [hourly.drop('snow', axis=1),
-                 hourly['snow'].apply(pd.Series)
-                 ], axis=1).rename(columns={'1h': 'snow'}).drop(columns=0)
-            hourly.fillna({'rain': 0, 'snow': 0}, inplace=True)
+                    0].apply(pd.Series)
+                 ], axis=1)
+            if 'rain' in hourly.columns:
+                hourly = pd.concat(
+                    [hourly.drop(['rain'], axis=1),
+                     hourly['rain'].apply(pd.Series)], axis=1).rename(columns={'1h': 'rain'}).drop(columns=0).fillna({'rain': 0})
+            if 'snow' in hourly.columns:
+                hourly = pd.concat(
+                    [hourly.drop('snow', axis=1),
+                     hourly['snow'].apply(pd.Series)
+                     ], axis=1).rename(columns={'1h': 'snow'}).drop(columns=0).fillna({'snow': 0})
             daily = pd.DataFrame(data=response['daily'])
             for col in ['dt', 'sunrise', 'sunset', 'moonrise', 'moonset']:
                 daily[col] = pd.to_datetime(daily[col], unit='s').dt.tz_localize(
