@@ -7,3 +7,5 @@ BASH_ENV=/etc/environment
 13 * * * * /usr/local/bin/python3 /app/power_prices.py >>/app/pyelectricity.log 2>&1
 # weather forecast
 59 * * * * /usr/local/bin/python3 /app/weather.py >>/app/pyelectricity.log 2>&1
+# solar forecast
+59 * * * * /usr/local/bin/python3 /app/solcast.py >>/app/pyelectricity.log 2>&1

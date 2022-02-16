@@ -19,6 +19,8 @@ threshold = int(os.getenv("THRESHOLD"))
 weather_api_key = os.getenv("WEATHER_API")
 latitude = os.getenv("WEATHER_LAT")
 longitude = os.getenv("WEATHER_LON")
+solcast_api_key = os.getenv("SOLCAST_API")
+solcast_site = os.getenv("SOLCAST_SITE")
 
 TIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
 
