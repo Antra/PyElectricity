@@ -12,7 +12,7 @@ API_BASE_URL = 'api.openweathermap.org'
 def get_weather_data(API_BASE_URL, weather_api_key, latitude, longitude):
     exclude = 'minutely'
     units = 'metric'
-    url = f'http://{API_BASE_URL}/data/2.5/onecall?lat={latitude}&lon={longitude}&exclude={exclude}&units={units}&appid={weather_api_key}'
+    url = f'https://{API_BASE_URL}/data/2.5/onecall?lat={latitude}&lon={longitude}&exclude={exclude}&units={units}&appid={weather_api_key}'
     try:
         response = requests.get(url).json()
         if response:
