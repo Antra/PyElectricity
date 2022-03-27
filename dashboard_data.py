@@ -71,3 +71,25 @@ def get_sunrise(base_date):
     except Exception as err:
         logger.error(
             f'** Dashboard Data: Error getting sunrise/sunset data from DB! Error message: {err}')
+
+
+def get_prices(base_date):
+    try:
+        engine = get_engine()
+        query = f"""
+            SELECT
+                timestamp,
+                price,
+                rolling_sum,
+                currency
+            FROM price_data
+            WHERE timestamp >= '{base_date}'
+            ORDER BY timestamp ASC
+            LIMIT 100
+        """
+        df = pd.read_sql(query, engine, parse_dates=['timestamp'])
+        return df
+
+    except Exception as err:
+        logger.error(
+            f'** Dashboard Data: Error getting electricity prices from DB! Error message: {err}')
