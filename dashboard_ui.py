@@ -38,22 +38,22 @@ st.write(
 # Battery Gauge - Plotly
 fig = go.Figure(go.Indicator(
     domain={'x': [0, 1], 'y': [0, 1]},
-    value=str(battery_pct) + '%',
+    value=battery_pct,
     mode="gauge+number+delta",
-    title={'text': "Battery level (now and compared to 1hr ago)"},
+    title={'text': "Battery percentage"},
     delta={'reference': battery_pct_1hr_old},
     gauge={'axis': {'range': [None, 100]},
            'steps': [
         {'range': [0, 85], 'color': "lightgray"},
         {'range': [85, 100], 'color': "gray"}],
         'threshold': {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': 85}}))
-fig.add_annotation(text='at 85% with maximum sun, battery is full in 20 mins',
+fig.add_annotation(text='battery level compared to 1hr ago<br>at 85% with maximum sun, battery is full in 20 mins',
                    align='left',
                    showarrow=False,
                    xref='paper',
                    yref='paper',
                    x=0.25,
-                   y=0.0017,
+                   y=-0.09,
                    bordercolor='black',
                    borderwidth=1)
 st.plotly_chart(fig, use_container_width=True)
