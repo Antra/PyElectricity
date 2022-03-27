@@ -117,8 +117,10 @@ ax.set_ylabel(f'Price ({price_currency})')
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
 plt.xticks(rotation=-45, fontsize=5)
 if midnight_index:
-    ax.axvline(x=prices[prices.index == midnight_index]['timestamp'], color='red',
+    ax.axvline(x=prices[prices.index == midnight_index]['timestamp'], color='grey',
                linestyle='--', label='midnight')
+
+ax.axhline(y=0.35, color='pink', linestyle='--', label='cheap')
 plt.legend(bbox_to_anchor=(1, 1))
 st.pyplot(fig, use_container_width=True)
 
