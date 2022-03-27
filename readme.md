@@ -34,7 +34,7 @@ They're running in a Docker setup, and expect the following environment variable
 - `SOLCAST_SITE` - the Site reference for the solar setup at Solcast
 
 For example: 
-```docker run --rm -d -e "DB_HOST=192.168.x.x" -e "DB_PORT=5432" -e "DB_USER=user" -e "DB=db" -e "DB_PASS=password" -e "QUERY_FREQUENCY=5" -e "THRESHOLD=60" -e "INVERTERIP=192.168.x.x" -e "WEATHER_API=457894" -e "WEATHER_LAT=12.3456" -e "WEATHER_LON=12.3456" -e "SOLCAST_API=657545" -e "SOLCAST_SITE=000a-b111-22c2-3d3d pyelectricity```
+```docker run --rm -d -e "DB_HOST=192.168.x.x" -e "DB_PORT=5432" -e "DB_USER=user" -e "DB=db" -e "DB_PASS=password" -e "QUERY_FREQUENCY=5" -e "THRESHOLD=60" -e "INVERTERIP=192.168.x.x" -e "WEATHER_API=457894" -e "WEATHER_LAT=12.3456" -e "WEATHER_LON=12.3456" -e "SOLCAST_API=657545" -e "SOLCAST_SITE=000a-b111-22c2-3d3d -p 8501:8501 pyelectricity```
 
 The docker image is available on [Docker Hub](https://hub.docker.com/repository/docker/antra/pyelectricity/general).
 
@@ -43,3 +43,6 @@ Currently, I am using PowerBI for visualisation/dasboarding; I am not certain if
 This is what it looks like at present.  
 
 ![powerbi dashboard](docs/sample_dashboard.png "Sample PowerBI dashboard")
+
+## Basic dashboard
+There's a basic dashboard added built with [Streamlit](https://streamlit.io/), it's accessible on `port 8501`.

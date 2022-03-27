@@ -4,7 +4,7 @@ FROM python:3.9-slim-bullseye
 # ENV DB_HOST 192.168.x.x
 # ENV DB_PORT 5432
 
-RUN apt-get update && apt install -y libpq-dev gcc cron git
+RUN apt-get update && apt install -y libpq-dev gcc cron git tk
 
 COPY . /app
 #RUN rm -f /app/crontab && rm -f /app/*.pbix && rm -f entrypoint.sh && rm -f /app/.env
