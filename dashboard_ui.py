@@ -1,4 +1,3 @@
-from turtle import color
 import streamlit as st
 import pandas as pd
 from config import setup_logger
@@ -39,9 +38,9 @@ st.write(
 # Battery Gauge - Plotly
 fig = go.Figure(go.Indicator(
     domain={'x': [0, 1], 'y': [0, 1]},
-    value=battery_pct,
+    value=str(battery_pct) + '%',
     mode="gauge+number+delta",
-    title={'text': "Battery level"},
+    title={'text': "Battery level (now and compared to 1hr ago)"},
     delta={'reference': battery_pct_1hr_old},
     gauge={'axis': {'range': [None, 100]},
            'steps': [
