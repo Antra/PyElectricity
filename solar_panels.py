@@ -31,7 +31,8 @@ def _get_data():
             # current effect in watt (positive is produced/exporting, negative is consuing/importing) - abs sum of P_Load+P_Grid?
             data['p'] = response['Body']['Data']['Inverters']['1']['P'] or 0
             # battery level; NB, recommendation is to keep the battery within 12%-98% SoC
-            data['soc'] = response['Body']['Data']['Inverters']['1']['SOC'] or 0
+            data['soc'] = response['Body']['Data']['Inverters']['1'].get(
+                'SOC') or 0
             # battery level, normalised percentage: (SOC-12)*100/86 %
             data['soc_normal'] = round((data['soc']-12)*100/86, 1) or 0
             # tz-aware timestamp of recording
