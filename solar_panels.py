@@ -35,6 +35,10 @@ def _get_data():
                 'SOC') or 0
             # battery level, normalised percentage: (SOC-12)*100/86 %
             data['soc_normal'] = round((data['soc']-12)*100/86, 1) or 0
+            # add the running totals
+            data['e_day'] = response['Body']['Data']['Site']['E_Day'] or 0
+            data['e_year'] = response['Body']['Data']['Site']['E_Year'] or 0
+            data['e_total'] = response['Body']['Data']['Site']['E_Total'] or 0
             # tz-aware timestamp of recording
             date_format = '%Y-%m-%dT%H:%M:%S%z'
             data['timestamp'] = dt.strptime(
@@ -54,7 +58,10 @@ def _get_data():
             'rel_auto': None,
             'p': None,
             'soc': None,
-            'soc_normal': None
+            'soc_normal': None,
+            'e_day': None,
+            'e_year': None,
+            'e_total': None
         }
         return empty_reponse
 
@@ -71,7 +78,10 @@ def _store_data(data):
             pct_autonomy,
             p_total,
             battery_state,
-            battery_state_norm)
+            battery_state_norm,
+            e_day,
+            e_year,
+            e_total)
         VALUES (
             '{data['timestamp']}',
             {data['p_akku']},
@@ -82,7 +92,10 @@ def _store_data(data):
             {data['rel_auto']},
             {data['p']},
             {data['soc']},
-            {data['soc_normal']}
+            {data['soc_normal']},
+            {data['e_day']},
+            {data['e_year']},
+            {data['e_total']}
         );
     """
     try:

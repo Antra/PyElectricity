@@ -15,9 +15,9 @@
             },
             "Site": {
                 "BatteryStandby": false,
-                "E_Day": 4334,
-                "E_Total": 453617,
-                "E_Year": 453617,
+                "E_Day": 4334, // AC energy (Wh) today
+                "E_Total": 453617, // AC energy (Wh) since ever
+                "E_Year": 453617, // AC energy (Wh) since this year
                 "Meter_Location": "grid",
                 "Mode": "bidirectional",
                 "P_Akku": 606.80000000000007, // effect to/from battery (positive is discharge, negative is charge)
