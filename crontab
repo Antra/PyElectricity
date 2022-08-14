@@ -12,4 +12,4 @@ BASH_ENV=/etc/environment
 # Streamlit dashboard
 @reboot sleep 30 && /usr/local/bin/python3 -m streamlit run /app/dashboard_ui.py >>/app/pyelectricity.log 2>&1
 # daily computation
-25 4 * * * /usr/local/bin/python3 /app/compute_date_summary.py >>/app/pyelectricity.log 2>&1
+25 2 * * * /usr/local/bin/python3 /app/compute_day_summary.py >>/app/pyelectricity.log 2>&1
