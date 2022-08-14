@@ -46,3 +46,7 @@ This is what it looks like at present.
 
 ## Basic dashboard
 There's a basic dashboard added built with [Streamlit](https://streamlit.io/), it's accessible on `port 8501`.
+
+
+# Historical sunrise/sunset
+Fetched via the API available on [Sunrise Sunset](https://sunrise-sunset.org/api)

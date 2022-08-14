@@ -1,6 +1,7 @@
 from config import setup_logger, get_engine, weather_api_key, latitude, longitude, TIME_FORMAT
 import requests
 import pandas as pd
+from datetime import timedelta
 
 
 logger = setup_logger('Weather', level='INFO')
@@ -88,6 +89,47 @@ def store_hourly_forecast(df):
             f'** Weather: Error writing hourly forecast data to DB! Error message: {err}')
 
 
+def _get_historical(latitude, longitude, date):
+    url = f'https://api.sunrise-sunset.org/json?lat={latitude}&lng={longitude}&date={date}&formatted=0'
+    try:
+        # their HTTPS certificate is expired, so disabling the check!
+        response = requests.get(url, verify=False).json()['results']
+
+        sunrise = pd.to_datetime(response['sunrise'])
+        sunset = pd.to_datetime(response['sunset'])
+
+        return (sunrise, sunset)
+
+    except Exception as err:
+        logger.error(
+            f'** Weather: Error getting historical sunrise/sunset data from the API! Error message: {err}')
+
+
+def construct_historical(latitude, longitude, start_date='2020-01-01'):
+    requests.packages.urllib3.disable_warnings()
+    try:
+        engine = get_engine()
+        query = """SELECT min(date) FROM weather_sunrise"""
+        with engine.connect() as conn:
+            cut_off = conn.execute(query).fetchone()[0] - timedelta(days=1)
+    except Exception as err:
+        logger.error(
+            f'** Weather: Error getting historical sunrise/sunset data from the API! Error message: {err}')
+
+    dates = pd.date_range(start=start_date, end=cut_off,
+                          freq='d').date.tolist()
+    suntimes = [_get_historical(
+        latitude=latitude, longitude=longitude, date=date) for date in dates]
+
+    sunrises = [date[0] for date in suntimes]
+    sunsets = [date[1] for date in suntimes]
+
+    diary = pd.DataFrame(
+        {'date': pd.to_datetime(dates), 'sunrise': sunrises, 'sunset': sunsets}).set_index('date')
+
+    store_basic_info(diary)
+
+
 # get the weather data
 current_weather, hourly_forecast, daily_forecast = get_weather_data(
     API_BASE_URL, weather_api_key, latitude, longitude)
@@ -107,5 +149,8 @@ hourly_forecast.set_index('dt', inplace=True)
 store_basic_info(daily_forecast)
 store_hourly_forecast(hourly_forecast)
 
+
+# manually construct the old sunrise/sunsets from historical data
+#construct_historical(latitude=latitude, longitude=longitude, start_date='2020-01-01')
 
 logger.info('*** PyElectricity: Weather terminating ***')
