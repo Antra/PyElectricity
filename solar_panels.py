@@ -44,6 +44,10 @@ def _get_data():
             data['timestamp'] = dt.strptime(
                 response['Head']['Timestamp'], date_format)
             logger.debug(f'Solar: Fetched some data from the inverter: {data}')
+            if data['soc_normal'] < 1:
+                data['soc_normal'] = 0
+            if data['soc_normal'] > 99:
+                data['soc_normal'] = 100
             return data
     except Exception as err:
         logger.error(
