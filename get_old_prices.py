@@ -17,7 +17,7 @@ currency = 'DKK'
 prices = elspot.Prices(currency=currency)
 
 # get last two years
-max_days = dt.now() - dt(dt.now().year-3, 12, 31).days
+max_days = (dt.now() - dt(dt.now().year-3, 12, 31)).days
 
 data = []
 
