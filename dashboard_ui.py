@@ -79,7 +79,7 @@ fig.add_annotation(text='battery level compared to 1hr ago<br>at 85% with maximu
                    y=-0.09,
                    bordercolor='black',
                    borderwidth=1)
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig)
 
 
 # Solar predictions - Matplotlib
@@ -97,7 +97,7 @@ ax.set_ylabel('Estimated solar production (kW)')
 #plt.legend(loc="upper right")
 plt.legend(bbox_to_anchor=(1, 1))
 plt.ylim(0, 5.5)
-st.pyplot(fig, use_container_width=True)
+st.pyplot(fig)
 
 
 # Power price
@@ -122,6 +122,6 @@ if midnight_index:
 
 ax.axhline(y=0.35, color='pink', linestyle='--', label='cheap')
 plt.legend(bbox_to_anchor=(1, 1))
-st.pyplot(fig, use_container_width=True)
+st.pyplot(fig)
 
 #logger.info('*** PyElectricity: Dashboard UI terminating ***')
