@@ -79,7 +79,7 @@ fig.add_annotation(text='battery level compared to 1hr ago<br>at 85% with maximu
                    y=-0.09,
                    bordercolor='black',
                    borderwidth=1)
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 
 # Solar predictions - Matplotlib
