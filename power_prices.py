@@ -35,6 +35,13 @@ df['rolling_sum'] = df['price'].rolling(3).sum().shift(-2)
 df = df.replace([np.inf, -np.inf], np.nan).dropna(subset=['price'])
 df['currency'] = currency
 
+# in case of daily saving time changes we may get a duplicated key:
+if any(df.index.duplicated(keep='last')):
+    df['time'] = df.index
+    df.loc[df.index.duplicated(keep='last'), 'time'] = df[df.index.duplicated(
+        keep='last')].time - np.timedelta64(1, 'h')
+    df = df.set_index('time', drop=True)
+
 try:
     engine = get_engine()
     # delete what we have in the dataframe -- plus anything older than 7 days?
