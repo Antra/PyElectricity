@@ -102,10 +102,11 @@ st.pyplot(fig)
 
 # Power price
 fig, ax = plt.subplots()
+prices['price'] = prices['price'] + prices['offset']
 ax.plot(prices['timestamp'], prices['price'], color='blue',
         linewidth=2.0, label='raw electricity price')
 
-ax.set_title('Electricity price')
+ax.set_title('Electricity price incl. net tariff')
 
 
 if prices["timestamp"].min().date() == prices["timestamp"].max().date():
@@ -120,7 +121,7 @@ if midnight_index:
     ax.axvline(x=prices[prices.index == midnight_index]['timestamp'], color='grey',
                linestyle='--', label='midnight')
 
-ax.axhline(y=0.35, color='pink', linestyle='--', label='cheap')
+ax.axhline(y=0.65, color='pink', linestyle='--', label='cheap')
 plt.legend(bbox_to_anchor=(1, 1))
 st.pyplot(fig)
 

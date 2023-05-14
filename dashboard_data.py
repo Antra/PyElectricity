@@ -74,6 +74,28 @@ def get_sunrise(base_date):
             f'** Dashboard Data: Error getting sunrise/sunset data from DB! Error message: {err}')
 
 
+def _get_offset(datetime):
+    """add the price offset for delivery of electricity
+    For Radius see: https://radiuselnet.dk/elnetkunder/tariffer-og-netabonnement
+    """
+    month, time = datetime.month, datetime.hour
+
+    tariffs = {
+        'summer': {'low': 0.1886, 'high': 0.2830, 'peak': 0.7359},
+        'winter': {'low': 0.1886, 'high': 0.5660, 'peak': 1.6980}
+    }
+
+    period = 'summer' if month in [4, 5, 6, 7, 8, 9] else 'winter'
+
+    rate = 'low' if time in [0, 1, 2, 3, 4, 5] else None
+    rate = 'peak' if not rate and time in [17, 18, 19, 20] else rate
+    rate = 'high' if not rate and time in [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 21, 22, 23] else rate
+
+    offset = tariffs.get(period, {}).get(rate, 0)
+
+    return offset
+
+
 def get_prices(base_date):
     try:
         engine = get_engine()
@@ -89,6 +111,7 @@ def get_prices(base_date):
             LIMIT 100
         """
         df = pd.read_sql(query, engine, parse_dates=['timestamp'])
+        df['offset'] = df.apply(lambda x: _get_offset(x['timestamp']), axis=1)
         return df
 
     except Exception as err:
