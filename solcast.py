@@ -2,6 +2,7 @@ from datetime import timedelta
 from config import setup_logger, get_engine, solcast_api_key, solcast_site, TIME_FORMAT
 import requests
 import pandas as pd
+from sqlalchemy import text
 
 logger = setup_logger('Solcast', level='INFO')
 logger.info('*** PyElectricity: Solcast starting ***')
@@ -38,7 +39,8 @@ def store_solcast(df):
         # delete existing values
         delete_query = f"""DELETE FROM solar_forecast WHERE timestamp IN {tuple(df.index.strftime(TIME_FORMAT))}"""
         with engine.connect() as conn:
-            conn.execute(delete_query)
+            # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
+            conn.execute(text(delete_query))
         df.to_sql('solar_forecast', engine, if_exists='append',
                   index=True, index_label='timestamp')
     except Exception as err:

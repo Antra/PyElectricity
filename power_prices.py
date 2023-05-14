@@ -4,6 +4,8 @@ from datetime import timedelta
 from datetime import datetime as dt
 from nordpool import elspot
 from config import get_engine, setup_logger, TIME_FORMAT
+from sqlalchemy import text
+
 
 logger = setup_logger('Power', level='INFO')
 logger.info('*** PyElectricity: Power starting ***')
@@ -48,7 +50,8 @@ try:
     # delete_query = f"""DELETE FROM price_data WHERE timestamp IN {tuple(df.index.strftime(TIME_FORMAT))} OR timestamp < '{(dt.now()).strftime(TIME_FORMAT)}'"""
     delete_query = f"""DELETE FROM price_data WHERE timestamp IN {tuple(df.index.strftime(TIME_FORMAT))}"""
     with engine.connect() as conn:
-        conn.execute(delete_query)
+        # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
+        conn.execute(text(delete_query))
 
     # and insert the dataframe keeping on the future prices -- removed to do time analysis
     #df = df[df.index > (dt.now() - timedelta(hours=1)).strftime(TIME_FORMAT)]

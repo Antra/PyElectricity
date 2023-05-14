@@ -2,6 +2,7 @@ from config import setup_logger, get_engine, weather_api_key, latitude, longitud
 import requests
 import pandas as pd
 from datetime import timedelta
+from sqlalchemy import text
 
 
 logger = setup_logger('Weather', level='INFO')
@@ -67,7 +68,8 @@ def store_basic_info(df):
         # delete existing values
         delete_query = f"""DELETE FROM weather_sunrise WHERE date IN {tuple(df.index.strftime('%Y-%m-%d'))}"""
         with engine.connect() as conn:
-            conn.execute(delete_query)
+            # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
+            conn.execute(text(delete_query))
         df[['sunrise', 'sunset']].to_sql('weather_sunrise', engine, if_exists='append',
                                          index=True, index_label='date')
     except Exception as err:
@@ -81,7 +83,8 @@ def store_hourly_forecast(df):
         # delete existing values
         delete_query = f"""DELETE FROM weather_hourly WHERE date IN {tuple(df.index.strftime(TIME_FORMAT))}"""
         with engine.connect() as conn:
-            conn.execute(delete_query)
+            # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
+            conn.execute(text(delete_query))
         df.to_sql('weather_hourly', engine, if_exists='append',
                   index=True, index_label='date')
     except Exception as err:
@@ -111,7 +114,8 @@ def construct_historical(latitude, longitude, start_date='2020-01-01'):
         engine = get_engine()
         query = """SELECT min(date) FROM weather_sunrise"""
         with engine.connect() as conn:
-            cut_off = conn.execute(query).fetchone()[0] - timedelta(days=1)
+            # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
+            cut_off = conn.execute(text(query)).fetchone()[0] - timedelta(days=1)
     except Exception as err:
         logger.error(
             f'** Weather: Error getting historical sunrise/sunset data from the API! Error message: {err}')

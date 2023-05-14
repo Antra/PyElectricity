@@ -1,6 +1,7 @@
 import pandas as pd
 from config import get_engine, setup_logger
 from datetime import timedelta
+from sqlalchemy import text
 
 logger = setup_logger('Dashboard Data', level='INFO')
 
@@ -66,9 +67,9 @@ def get_sunrise(base_date):
             LIMIT 1
         """
         with engine.connect() as conn:
-            sunrise = conn.execute(query).fetchone()
+            # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
+            sunrise = conn.execute(text(query)).fetchone()
             return sunrise
-
     except Exception as err:
         logger.error(
             f'** Dashboard Data: Error getting sunrise/sunset data from DB! Error message: {err}')

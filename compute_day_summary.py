@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import timedelta
 from datetime import datetime as dt
 from config import setup_logger, get_engine
+from sqlalchemy import text
 
 logger = setup_logger('Computation', level='INFO')
 logger.info('*** PyElectricity: Computation starting ***')
@@ -14,7 +15,8 @@ now = dt.utcnow()
 engine = get_engine()
 query = f"""SELECT max(date) FROM daily_summary"""
 with engine.connect() as conn:
-    newest_date = conn.execute(query).fetchone()[0]
+    # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
+    newest_date = conn.execute(text(query)).fetchone()[0]
 
 
 query = f"""-- diary query with battery and first/last 1kW+2kW
