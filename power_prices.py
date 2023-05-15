@@ -49,12 +49,12 @@ try:
     # delete what we have in the dataframe -- plus anything older than 7 days?
     # delete_query = f"""DELETE FROM price_data WHERE timestamp IN {tuple(df.index.strftime(TIME_FORMAT))} OR timestamp < '{(dt.now()).strftime(TIME_FORMAT)}'"""
     delete_query = f"""DELETE FROM price_data WHERE timestamp IN {tuple(df.index.strftime(TIME_FORMAT))}"""
-    with engine.connect() as conn:
+    with engine.begin() as conn:
         # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
-        conn.execute(text(delete_query))
+        result = conn.execute(text(delete_query))
 
     # and insert the dataframe keeping on the future prices -- removed to do time analysis
-    #df = df[df.index > (dt.now() - timedelta(hours=1)).strftime(TIME_FORMAT)]
+    # df = df[df.index > (dt.now() - timedelta(hours=1)).strftime(TIME_FORMAT)]
     df.to_sql('price_data', engine, if_exists='append',
               index=True, index_label='timestamp')
     logger.debug(f'Power: Write some data to the DB, {df.shape[0]} rows')

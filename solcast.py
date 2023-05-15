@@ -38,7 +38,7 @@ def store_solcast(df):
         engine = get_engine()
         # delete existing values
         delete_query = f"""DELETE FROM solar_forecast WHERE timestamp IN {tuple(df.index.strftime(TIME_FORMAT))}"""
-        with engine.connect() as conn:
+        with engine.begin() as conn:
             # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
             conn.execute(text(delete_query))
         df.to_sql('solar_forecast', engine, if_exists='append',
