@@ -49,6 +49,7 @@ delete_query = f"""DELETE FROM price_data WHERE timestamp IN {tuple(df.index.str
 with engine.connect() as conn:
     # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
     conn.execute(text(delete_query))
+    conn.commit()
 
 df.to_sql('price_data', engine, if_exists='append',
           index=True, index_label='timestamp')

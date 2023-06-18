@@ -70,6 +70,7 @@ def store_basic_info(df):
         with engine.connect() as conn:
             # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
             conn.execute(text(delete_query))
+            conn.commit()
         df[['sunrise', 'sunset']].to_sql('weather_sunrise', engine, if_exists='append',
                                          index=True, index_label='date')
     except Exception as err:
@@ -85,6 +86,7 @@ def store_hourly_forecast(df):
         with engine.connect() as conn:
             # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
             conn.execute(text(delete_query))
+            conn.commit()
         df.to_sql('weather_hourly', engine, if_exists='append',
                   index=True, index_label='date')
     except Exception as err:
@@ -115,7 +117,8 @@ def construct_historical(latitude, longitude, start_date='2020-01-01'):
         query = """SELECT min(date) FROM weather_sunrise"""
         with engine.connect() as conn:
             # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
-            cut_off = conn.execute(text(query)).fetchone()[0] - timedelta(days=1)
+            cut_off = conn.execute(text(query)).fetchone()[
+                0] - timedelta(days=1)
     except Exception as err:
         logger.error(
             f'** Weather: Error getting historical sunrise/sunset data from the API! Error message: {err}')
@@ -155,6 +158,6 @@ store_hourly_forecast(hourly_forecast)
 
 
 # manually construct the old sunrise/sunsets from historical data
-#construct_historical(latitude=latitude, longitude=longitude, start_date='2020-01-01')
+# construct_historical(latitude=latitude, longitude=longitude, start_date='2020-01-01')
 
 logger.info('*** PyElectricity: Weather terminating ***')

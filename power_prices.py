@@ -51,8 +51,8 @@ try:
     delete_query = f"""DELETE FROM price_data WHERE timestamp IN {tuple(df.index.strftime(TIME_FORMAT))}"""
     with engine.begin() as conn:
         # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
-        result = conn.execute(text(delete_query))
-
+        conn.execute(text(delete_query))
+        conn.commit()
     # and insert the dataframe keeping on the future prices -- removed to do time analysis
     # df = df[df.index > (dt.now() - timedelta(hours=1)).strftime(TIME_FORMAT)]
     df.to_sql('price_data', engine, if_exists='append',

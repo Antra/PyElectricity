@@ -41,6 +41,7 @@ def store_solcast(df):
         with engine.begin() as conn:
             # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
             conn.execute(text(delete_query))
+            conn.commit()
         df.to_sql('solar_forecast', engine, if_exists='append',
                   index=True, index_label='timestamp')
     except Exception as err:
