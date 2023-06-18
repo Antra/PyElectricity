@@ -22,6 +22,16 @@ longitude = os.getenv("WEATHER_LON")
 solcast_api_key = os.getenv("SOLCAST_API")
 solcast_site = os.getenv("SOLCAST_SITE")
 
+
+tuya_device_config = {'device1_id': os.getenv('DEVICE1_ID', None),
+                      'device1_key': os.getenv('DEVICE1_KEY', None),
+                      'device2_id': os.getenv('DEVICE2_ID', None),
+                      'device2_key': os.getenv('DEVICE2_KEY', None),
+                      'device3_id': os.getenv('DEVICE3_ID', None),
+                      'device3_key': os.getenv('DEVICE3_KEY', None)
+                      }
+
+
 TIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
 
 loggers = {}
