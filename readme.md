@@ -37,7 +37,7 @@ They're running in a Docker setup, and expect the following environment variable
 - `DEVICEn_KEY` - the device key of the nth [Tuya](https://iot.tuya.com/) smart plug; use [Network scanning](https://pypi.org/project/tinytuya/#:~:text=get%20these%20keys.-,Network%20Scanner,-TinyTuya%20has%20a) to obtain
 
 For example: 
-```docker run --rm -d -e "DB_HOST=192.168.x.x" -e "DB_PORT=5432" -e "DB_USER=user" -e "DB=db" -e "DB_PASS=password" -e "QUERY_FREQUENCY=5" -e "THRESHOLD=60" -e "INVERTERIP=192.168.x.x" -e "WEATHER_API=457894" -e "WEATHER_LAT=12.3456" -e "WEATHER_LON=12.3456" -e "SOLCAST_API=657545" -e "SOLCAST_SITE=000a-b111-22c2-3d3d -e "DEVICE1_ID=123deviceID" -e"DEVICE1_KEY=123deviceKEY" -e "DEVICE2_ID=321deviceID" -e"DEVICE2_KEY=321deviceKEY" -e "DEVICE3_ID=456deviceID" -e"DEVICE3_KEY=456deviceKEY" -p 8501:8501 -p 6666-6667:6666-6667/udp -p 7000:7000/udp -p6668:6668/tcp pyelectricity```
+```docker run --rm -d -e "DB_HOST=192.168.x.x" -e "DB_PORT=5432" -e "DB_USER=user" -e "DB=db" -e "DB_PASS=password" -e "QUERY_FREQUENCY=5" -e "THRESHOLD=60" -e "INVERTERIP=192.168.x.x" -e "WEATHER_API=457894" -e "WEATHER_LAT=12.3456" -e "WEATHER_LON=12.3456" -e "SOLCAST_API=657545" -e "SOLCAST_SITE=000a-b111-22c2-3d3d -e "DEVICE1_ID=123deviceID" -e "DEVICE1_KEY=123deviceKEY" -e "DEVICE2_ID=321deviceID" -e "DEVICE2_KEY=321deviceKEY" -e "DEVICE3_ID=456deviceID" -e "DEVICE3_KEY=456deviceKEY" -p 8501:8501 -p 6666-6667:6666-6667/udp -p 7000:7000/udp -p6668:6668/tcp pyelectricity```
 
 The docker image is available on [Docker Hub](https://hub.docker.com/repository/docker/antra/pyelectricity/general).
 

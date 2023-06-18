@@ -24,8 +24,8 @@ def _setup(dev_config):
                     version=3.3
                 ))
         except:
-            print(
-                f'Device#{dev_id} ({dev_config[f"device{dev_id}_id"]}) not found, skipping')
+            logger.info(
+                f'** Consumption: Device#{dev_id} ({dev_config[f"device{dev_id}_id"]}) not found, skipping')
 
     return devices
 
@@ -62,7 +62,7 @@ def _store(timestamp, dev_id, device_id, amps, watts, volts, device_location=Non
             conn.commit()
 
         logger.debug(
-            f'Consumption: Data written to DB: {timestamp.strftime(TIME_FORMAT)} for device#{dev_id}, {device_id}')
+            f'** Consumption: Data written to DB: {timestamp.strftime(TIME_FORMAT)} for device#{dev_id}, {device_id}')
 
     except Exception as err:
         logger.error(
