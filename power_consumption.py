@@ -100,4 +100,5 @@ if __name__ == '__main__':
         for id, dev in enumerate(DEVICES):
             # actual handling
             _update(device=dev, id=id)
-            sleep(freq)
+
+        sleep(freq)
