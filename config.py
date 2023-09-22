@@ -28,8 +28,23 @@ tuya_device_config = {'device1_id': os.getenv('DEVICE1_ID', None),
                       'device2_id': os.getenv('DEVICE2_ID', None),
                       'device2_key': os.getenv('DEVICE2_KEY', None),
                       'device3_id': os.getenv('DEVICE3_ID', None),
-                      'device3_key': os.getenv('DEVICE3_KEY', None)
+                      'device3_key': os.getenv('DEVICE3_KEY', None),
+                      'device4_id': os.getenv('DEVICE4_ID', None),
+                      'device4_key': os.getenv('DEVICE4_KEY', None),
+                      'device5_id': os.getenv('DEVICE5_ID', None),
+                      'device5_key': os.getenv('DEVICE5_KEY', None),
+                      'device6_id': os.getenv('DEVICE6_ID', None),
+                      'device6_key': os.getenv('DEVICE6_KEY', None),
+                      'device7_id': os.getenv('DEVICE7_ID', None),
+                      'device7_key': os.getenv('DEVICE7_KEY', None),
+                      'device8_id': os.getenv('DEVICE8_ID', None),
+                      'device8_key': os.getenv('DEVICE8_KEY', None),
+                      'device9_id': os.getenv('DEVICE9_ID', None),
+                      'device9_key': os.getenv('DEVICE9_KEY', None)
                       }
+# remove the devices we don't actually have to speed up
+tuya_device_config = {k: v for k, v in tuya_device_config.items() if v}
+tuya_device_count = len(tuya_device_config) // 2
 
 
 TIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'

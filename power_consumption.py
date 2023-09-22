@@ -1,7 +1,7 @@
 import tinytuya
 from datetime import datetime as dt
 from pytz import timezone
-from config import setup_logger, get_engine, tuya_device_config, TIME_FORMAT, freq
+from config import setup_logger, get_engine, tuya_device_config, tuya_device_count, TIME_FORMAT, freq
 from sqlalchemy import text
 from time import sleep
 
@@ -12,7 +12,7 @@ logger.info('*** PyElectricity: Consumption starting ***')
 def _setup(dev_config):
     devices = []
 
-    for dev_id in range(1, 4):
+    for dev_id in range(1, tuya_device_count+1):
         try:
             device_list = [
                 dev_config[f'device{dev_id}_id'], dev_config[f'device{dev_id}_key']]
