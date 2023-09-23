@@ -101,4 +101,6 @@ if __name__ == '__main__':
             # actual handling
             _update(device=dev, id=id)
 
-        sleep(freq)
+        if tuya_device_count <= 3:
+            # we don't want to run too fast if there are few devinces
+            sleep(freq)
