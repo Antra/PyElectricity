@@ -33,8 +33,10 @@ def _get_data():
             # battery level; NB, recommendation is to keep the battery within 12%-98% SoC
             data['soc'] = response['Body']['Data']['Inverters']['1'].get(
                 'SOC') or 0
-            # battery level, normalised percentage: (SOC-12)*100/86 %
-            data['soc_normal'] = round((data['soc']-12)*100/86, 1) or 0
+            # battery level, normalised percentage: (SOC-12)*100/86 % for LG Chem
+            # data['soc_normal'] = round((data['soc']-12)*100/86, 1) or 0
+            # battery level, normalised percentage: (SOC-12)*100/86 % for BYD battery
+            data['soc_normal'] = round((data['soc']-5)*100/95, 1) or 0
             # add the running totals
             data['e_day'] = response['Body']['Data']['Site']['E_Day'] or 0
             data['e_year'] = response['Body']['Data']['Site']['E_Year'] or 0

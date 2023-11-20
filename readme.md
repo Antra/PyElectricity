@@ -6,7 +6,8 @@ My setup consists of:
 - `20x MaysunSolar 310Wp panels` (approx. 6kW peak effect)
 - `Smart Meter 63A` (electricity meter)
 - `Datalogger module` (logger/uploader to Fronius)
-- `LG Resu H` (9800Wh battery)
+- ~~`LG Resu H` (9800Wh battery)~~ *NEVER buy a LG Chem battery!*
+- `BYD HVM13` (13800Wh battery)
 - `PostgreSQL 13` (database running via Docker)
 - `Raspberry Pi 3b+` (executing the scripts, runs Raspbian Linux)
 - `Denver SHP-102` (SmartPlugs for recording energy consumption)
