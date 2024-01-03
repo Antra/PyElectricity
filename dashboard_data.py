@@ -76,21 +76,22 @@ def get_sunrise(base_date):
 
 
 def _get_offset(datetime):
-    """add the price offset for delivery of electricity
+    """add the price offset for delivery of electricity (incl tax)
     For Radius see: https://radiuselnet.dk/elnetkunder/tariffer-og-netabonnement
     """
     month, time = datetime.month, datetime.hour
 
     tariffs = {
-        'summer': {'low': 0.1886, 'high': 0.2830, 'peak': 0.7359},
-        'winter': {'low': 0.1886, 'high': 0.5660, 'peak': 1.6980}
+        'summer': {'low': 0.1519, 'high': 0.2277, 'peak': 0.5923},
+        'winter': {'low': 0.1519, 'high': 0.4556, 'peak': 1.3668}
     }
 
     period = 'summer' if month in [4, 5, 6, 7, 8, 9] else 'winter'
 
     rate = 'low' if time in [0, 1, 2, 3, 4, 5] else None
     rate = 'peak' if not rate and time in [17, 18, 19, 20] else rate
-    rate = 'high' if not rate and time in [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 21, 22, 23] else rate
+    rate = 'high' if not rate and time in [
+        6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 21, 22, 23] else rate
 
     offset = tariffs.get(period, {}).get(rate, 0)
 
