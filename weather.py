@@ -14,7 +14,7 @@ API_BASE_URL = 'api.openweathermap.org'
 def get_weather_data(API_BASE_URL, weather_api_key, latitude, longitude):
     exclude = 'minutely'
     units = 'metric'
-    url = f'https://{API_BASE_URL}/data/2.5/onecall?lat={latitude}&lon={longitude}&exclude={exclude}&units={units}&appid={weather_api_key}'
+    url = f'https://{API_BASE_URL}/data/3.0/onecall?lat={latitude}&lon={longitude}&exclude={exclude}&units={units}&appid={weather_api_key}'
     try:
         response = requests.get(url).json()
         if response:
@@ -71,8 +71,8 @@ def store_basic_info(df):
             # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
             conn.execute(text(delete_query))
             conn.commit()
-        df[['sunrise', 'sunset']].to_sql('weather_sunrise', engine, if_exists='append',
-                                         index=True, index_label='date')
+        df[['sunrise', 'sunset', 'summary']].to_sql('weather_sunrise', engine, if_exists='append',
+                                                    index=True, index_label='date')
     except Exception as err:
         logger.error(
             f'** Weather: Error writing sunrise data to DB! Error message: {err}')
