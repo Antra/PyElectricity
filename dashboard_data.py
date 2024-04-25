@@ -61,7 +61,8 @@ def get_sunrise(base_date):
         query = f"""
             SELECT
                 sunrise,
-                sunset
+                sunset,
+                summary
             FROM weather_sunrise
             WHERE date = '{base_date}'
             LIMIT 1

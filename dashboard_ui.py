@@ -11,7 +11,7 @@ import pytz
 
 # importing Streamlit seems to make logging happen to the console, but it's also logged to the file as usual
 logger = setup_logger('Dashboard UI', level='INFO')
-#logger.info('*** PyElectricity: Dashboard UI starting ***')
+# logger.info('*** PyElectricity: Dashboard UI starting ***')
 
 # Get data
 timezone = 'Europe/Copenhagen'
@@ -29,7 +29,7 @@ solar = get_solar_prediction(base_date).rename(
              'pv_estimate10': 'Pessimistic',
              'pv_estimate90': 'Optimistic'}).set_index('timestamp')
 
-sunrise, sunset = get_sunrise(base_date)
+sunrise, sunset, summary = get_sunrise(base_date)
 # streamlit doesn't handletimezones well; so hardcoding it
 sunrise = sunrise.astimezone(tz=pytz.timezone(timezone))
 sunset = sunset.astimezone(tz=pytz.timezone(timezone))
@@ -56,7 +56,7 @@ price_currency = prices['currency'].values[0]
 st.title('Solar and Weather data')
 
 st.write(
-    f"Today's sunrise was at {sunrise.time()}, and the sun will set at {sunset.time()}")
+    f"Today's sunrise was at {sunrise.time()}, and the sun will set at {sunset.time()}.  \nAccording to the weather forecast: {summary}.")
 
 # Battery Gauge - Plotly
 fig = go.Figure(go.Indicator(
@@ -94,7 +94,7 @@ ax.axvline(x=dt.utcnow(), color='grey', linestyle='--', label='right now')
 ax.set_title('Solar production predictions for the next few days')
 ax.set_xlabel('Today and next two days')
 ax.set_ylabel('Estimated solar production (kW)')
-#plt.legend(loc="upper right")
+# plt.legend(loc="upper right")
 plt.legend(bbox_to_anchor=(1, 1))
 plt.ylim(0, 5.5)
 st.pyplot(fig)
@@ -125,4 +125,4 @@ ax.axhline(y=0.65, color='pink', linestyle='--', label='cheap')
 plt.legend(bbox_to_anchor=(1, 1))
 st.pyplot(fig)
 
-#logger.info('*** PyElectricity: Dashboard UI terminating ***')
+# logger.info('*** PyElectricity: Dashboard UI terminating ***')
