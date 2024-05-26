@@ -80,7 +80,7 @@ details = pd.read_sql(query, engine).set_index(
     'timestamp').resample('S').bfill()
 est_dict = {str(k): v for k, v in details.groupby(details.index.date)[
     'p_solar'].agg(lambda x: x.sum()/3600000).to_dict().items()}
-summary['daily_solar_est'] = summary['date'].map(est_dict)
+summary['daily_solar_est'] = summary['date'].map(est_dict).fillna(0)
 
 # sort the symmary and commit it
 summary.sort_values(by='date', ascending=True, ignore_index=True, inplace=True)
