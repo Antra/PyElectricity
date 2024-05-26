@@ -73,9 +73,17 @@ for col in int_cols:
 
 summary.rename(columns={'diary_date': 'date'}, inplace=True)
 
+# add the estimated solar production
+# this pretty close to what Solarweb reports; some difference, but precise enough to be within ~0.5kWh, always below on the dates I've tested
+query = f"""SELECT timestamp, p_solar from public.inverter_data where timestamp < '{str((pd.to_datetime(summary.date.max()) + timedelta(days=1)).date())}' and timestamp >= '{summary.date.min()}'"""
+details = pd.read_sql(query, engine).set_index(
+    'timestamp').resample('S').bfill()
+est_dict = {str(k): v for k, v in details.groupby(details.index.date)[
+    'p_solar'].agg(lambda x: x.sum()/3600000).to_dict().items()}
+summary['daily_solar_est'] = summary['date'].map(est_dict)
+
+# sort the symmary and commit it
 summary.sort_values(by='date', ascending=True, ignore_index=True, inplace=True)
-
-
 summary.to_sql('daily_summary', engine, if_exists='append', index=False)
 
 logger.info('*** PyElectricity: Computation terminating ***')
