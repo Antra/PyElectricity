@@ -205,7 +205,7 @@ def _how_many_clusters():
 if __name__ == '__main__':
     logger.info('*** PyElectricity: Computation starting ***')
 
-    devices = [0, 1, 2, 3]
+    devices = [0, 1, 2]
 
     for dev_id in devices:
         df = get_data(dev_id=dev_id)
@@ -216,3 +216,35 @@ if __name__ == '__main__':
         summary_line_plot(df, location=location, display=True)
 
     logger.info('*** PyElectricity: Computation terminating ***')
+
+
+# -- update the device_location for the devices
+# update consumption
+# set device_location = 'dishwasher'
+# where dev_id = 0;
+# --where device_id = 'bfe9b69f55e0b386f4xskd';
+# update consumption
+# set device_location = 'laundry machine'
+# where dev_id = 1;
+# --where device_id = 'bf88d12bd0ee2e2fe86azg';
+# update consumption
+# set device_location = 'drier'
+# where dev_id = 2;
+# --where device_id = 'bfc6b71faed5d7662f3enx';
+# update consumption
+# set device_location = 'quooker'
+# where dev_id = 3;
+# --where device_id = 'bfbcf3f9da753b993b0iog';
+# update consumption
+# set device_location = ''
+# where dev_id = 4;
+# --where device_id = 'bf599cac3e497a0dcaa0md;
+# update consumption
+# set device_location = ''
+# where dev_id = 5
+# --where device_id = 'bf10a4565febd19132yrzs';
+
+
+# select dev_id, device_location, count(*) from consumption
+# group by 1, 2
+# order by 1 asc, 2 desc

@@ -36,7 +36,19 @@ query = f"""-- diary query with battery and first/last 1kW+2kW
             battery as (select cast(timestamp as date) as diary_date, min(battery_state) as min_battery_raw, max(battery_state) as max_battery_raw, min(battery_state_norm) as min_battery, max(battery_state_norm) as max_battery
             from public.inverter_data
             group by 1
-            )
+            ),
+			battery_snapshot as (
+				SELECT * FROM (
+					SELECT
+						timestamp::date as diary_date,
+						ROW_NUMBER() OVER (PARTITION BY timestamp::date ORDER BY abs(extract(epoch from (timestamp::time - '01:00:00'::time))) ASC) as row_num_1am,
+						ROW_NUMBER() OVER (PARTITION BY timestamp::date ORDER BY abs(extract(epoch from (timestamp::time - '05:00:00'::time))) ASC) as row_num_5am,
+						battery_state
+					from public.inverter_data
+					where timestamp::time < '08:00:00'::time
+					)
+					where (row_num_1am = 1 OR row_num_5am = 1)
+			)
             select
                 cast(inv.timestamp as date) as diary_date,
                 batt.min_battery_raw,
@@ -49,6 +61,12 @@ query = f"""-- diary query with battery and first/last 1kW+2kW
                 day2kw.last_time as last_2kw,
                 first_last.first_time as first_prod,
                 first_last.last_time as last_prod,
+				COALESCE(snap1am.battery_state, 0) as battery_at_1am,
+				COALESCE(snap5am.battery_state, 0) as battery_at_5am,
+				CASE
+					WHEN COALESCE(snap1am.battery_state, 0) < COALESCE(snap1am.battery_state, 0) THEN TRUE
+					ELSE FALSE
+				END as night_grid_charge,
                 max(p_solar) as peak_solar,
                 max(e_day) as daily_total
             from public.inverter_data inv
@@ -56,9 +74,11 @@ query = f"""-- diary query with battery and first/last 1kW+2kW
             left join day_min_max2kw day2kw on cast(inv.timestamp as date) = day2kw.diary_date
             left join day_first_last first_last on cast(inv.timestamp as date) = first_last.diary_date
             left join battery batt on cast(inv.timestamp as date) = batt.diary_date
+			left join battery_snapshot snap1am on cast(inv.timestamp as date) = snap1am.diary_date and snap1am.row_num_1am = 1
+			left join battery_snapshot snap5am on cast(inv.timestamp as date) = snap5am.diary_date and snap5am.row_num_5am = 1
             where inv.timestamp < '{now.date()}'
             and inv.timestamp > '{newest_date + timedelta(days=1)}'
-            group by 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+            group by 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
             order by 1 asc
 """
 
