@@ -64,7 +64,7 @@ query = f"""-- diary query with battery and first/last 1kW+2kW
 				COALESCE(snap1am.battery_state, 0) as battery_at_1am,
 				COALESCE(snap5am.battery_state, 0) as battery_at_5am,
 				CASE
-					WHEN COALESCE(snap1am.battery_state, 0) < COALESCE(snap1am.battery_state, 0) THEN TRUE
+					WHEN COALESCE(snap1am.battery_state, 0)+10 < COALESCE(snap5am.battery_state, 0) THEN TRUE
 					ELSE FALSE
 				END as night_grid_charge,
                 max(p_solar) as peak_solar,
