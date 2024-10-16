@@ -71,6 +71,7 @@ query = f"""-- diary query with battery and first/last 1kW+2kW
             left join day_first_last first_last on cast(inv.timestamp as date) = first_last.diary_date
             left join battery batt on cast(inv.timestamp as date) = batt.diary_date
             where inv.timestamp < '{now.date()}'
+            and inv.timestamp > '{newest_date + timedelta(days=-1)}'
             group by 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
             order by 1 asc
 """
