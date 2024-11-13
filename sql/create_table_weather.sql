@@ -28,5 +28,5 @@ CREATE TABLE IF NOT EXISTS public.weather_sunrise
     date date primary key,
     sunrise timestamptz,
     sunset timestamptz,
-    summary varchar(100)
+    summary varchar(110)
 );
