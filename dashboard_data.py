@@ -83,8 +83,8 @@ def _get_offset(datetime):
     month, time = datetime.month, datetime.hour
 
     tariffs = {
-        'summer': {'low': 0.1519, 'high': 0.2277, 'peak': 0.5923},
-        'winter': {'low': 0.1519, 'high': 0.4556, 'peak': 1.3668}
+        'summer': {'low': 0.0976, 'high': 0.1465, 'peak': 0.3808},
+        'winter': {'low': 0.0976, 'high': 0.2929, 'peak': 0.8788}
     }
 
     period = 'summer' if month in [4, 5, 6, 7, 8, 9] else 'winter'
