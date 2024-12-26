@@ -24,7 +24,7 @@ def get_battery_state():
         #     return battery_pct
 
         df = pd.read_sql(query, engine, parse_dates=['timestamp'])
-        df['battery_state_norm'].clip(0, 100, inplace=True)
+        df['battery_state_norm'] = df['battery_state_norm'].clip(0, 100)
         return df
 
     except Exception as err:
