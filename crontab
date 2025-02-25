@@ -11,7 +11,8 @@ BASH_ENV=/etc/environment
 59 * * * * /usr/local/bin/python3 /app/solcast.py >>/app/pyelectricity.log 2>&1
 # Streamlit dashboard
 @reboot sleep 30 && /usr/local/bin/python3 -m streamlit run /app/dashboard_ui.py --browser.gatherUsageStats False >>/app/pyelectricity.log 2>&1
+0 * * * * grep -l "streamlit run" /proc/[0-9]*/cmdline 2>/dev/null || nohup /usr/local/bin/python3 -m streamlit run /app/dashboard_ui.py --browser.gatherUsageStats False >> /app/pyelectricity.log 2>&1 &
 # daily computation
 25 2 * * * /usr/local/bin/python3 /app/compute_day_summary.py >>/app/pyelectricity.log 2>&1
 # power consumption
-@reboot sleep 30 && /usr/local/bin/python3 /app/power_consumption.py >>/app/pyelectricity.log 2>&1
+@reboot sleep 120 && /usr/local/bin/python3 /app/power_consumption.py >>/app/pyelectricity.log 2>&1
