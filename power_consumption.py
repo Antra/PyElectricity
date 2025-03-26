@@ -11,7 +11,6 @@ logger.info('*** PyElectricity: Consumption starting ***')
 
 def _setup(dev_config):
     devices = []
-
     for dev_id in range(1, tuya_device_count+1):
         try:
             device_list = [
@@ -26,7 +25,6 @@ def _setup(dev_config):
         except:
             logger.info(
                 f'** Consumption: Device#{dev_id} ({dev_config[f"device{dev_id}_id"]}) not found, skipping')
-
     return devices
 
 
@@ -96,7 +94,7 @@ if __name__ == '__main__':
     logger.info(
         '*** Consumption: Found %d device(s) in total - starting the recording loop ***', len(DEVICES))
     # TODO: can we run in permanent loop here? It didn't work for solar_panels.py on the RPi, but is it better from Docker? -- if nothing else, how do we ensure that we re-discover the devices if they are added/removed?
-    while True:
+    while len(DEVICES) > 0:
         for id, dev in enumerate(DEVICES):
             # actual handling
             _update(device=dev, id=id)
