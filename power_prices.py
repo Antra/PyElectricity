@@ -20,12 +20,15 @@ prices = elspot.Prices(currency=currency)
 
 prices_today = prices.hourly(areas=areas, end_date=today)[
     'areas']['DK2']['values']
-prices_tomorrow = prices.hourly(areas=areas, end_date=tomorrow)[
-    'areas']['DK2']['values']
+try:
+    prices_tomorrow = prices.hourly(areas=areas, end_date=tomorrow)[
+        'areas']['DK2']['values']
+except Exception as err:
+    prices_tomorrow = None
 
-df = pd.DataFrame(data=prices.hourly(areas=areas)['areas']['DK2']['values'])
-df = pd.concat([pd.DataFrame(data=prices_today), pd.DataFrame(
-    data=prices_tomorrow)]).reset_index(drop=True).set_index('start').drop(columns=['end']).rename(columns={'value': 'price'})
+# df = pd.DataFrame(data=prices.hourly(areas=areas)['areas']['DK2']['values'])
+df = pd.concat([pd.DataFrame(data=prices_today), pd.DataFrame(data=prices_tomorrow)]).reset_index(
+    drop=True).set_index('start').drop(columns=['end']).rename(columns={'value': 'price'}).drop_duplicates()
 
 df['price'] = df['price'] / 1000
 
