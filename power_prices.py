@@ -28,7 +28,7 @@ except Exception as err:
 
 # df = pd.DataFrame(data=prices.hourly(areas=areas)['areas']['DK2']['values'])
 df = pd.concat([pd.DataFrame(data=prices_today), pd.DataFrame(data=prices_tomorrow)]).reset_index(
-    drop=True).set_index('start').drop(columns=['end']).rename(columns={'value': 'price'}).drop_duplicates()
+    drop=True).drop_duplicates().set_index('start').drop(columns=['end']).rename(columns={'value': 'price'})
 
 df['price'] = df['price'] / 1000
 
