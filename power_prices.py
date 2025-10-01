@@ -16,13 +16,16 @@ tomorrow = dt.now().date() + timedelta(days=+1)
 
 areas = ['DK2']
 currency = 'DKK'
+time_resolution = 15
 prices = elspot.Prices(currency=currency)
 
-prices_today = prices.hourly(areas=areas, end_date=today)[
+# prices_today = prices.hourly(areas=areas, end_date=today)['areas']['DK2']['values']
+prices_today = prices.fetch(areas=areas, end_date=today, resolution=time_resolution)[
     'areas']['DK2']['values']
 try:
-    prices_tomorrow = prices.hourly(areas=areas, end_date=tomorrow)[
-        'areas']['DK2']['values']
+    # prices_tomorrow = prices.hourly(areas=areas, end_date=tomorrow)['areas']['DK2']['values']
+    prices_tomorrow = prices.fetch(
+        areas=areas, end_date=tomorrow, resolution=time_resolution)['areas']['DK2']['values']
 except Exception as err:
     prices_tomorrow = None
 
@@ -32,10 +35,17 @@ df = pd.concat([pd.DataFrame(data=prices_today), pd.DataFrame(data=prices_tomorr
 
 df['price'] = df['price'] / 1000
 
-df['rolling_sum'] = df['price'].rolling(3).sum().shift(-2)
+# rolling rum of 3 hours
+# df['rolling_sum'] = df['price'].rolling(3).sum().shift(-2)
 
-# lowest_value = df['rolling_sum'].min()
-# lowest_three = sorted(df['rolling_sum'].values)[:3]
+# Find how many rows actually make up a 3h window
+window_size = df.index.to_series().diff().median()
+rows_in_3h = int(pd.Timedelta('3h') / window_size)
+
+df['rolling_sum'] = df['price'].rolling(
+    '3h').sum() / 4  # divide by 4 for quarterly
+# align the rolling sum to the start of the window
+df['rolling_sum'] = df['rolling_sum'].shift(-(rows_in_3h-1))
 
 df = df.replace([np.inf, -np.inf], np.nan).dropna(subset=['price'])
 df['currency'] = currency
