@@ -99,7 +99,7 @@ def _get_offset(datetime):
     return offset
 
 
-def get_prices(base_date):
+def get_prices(base_date, limit=100):
     try:
         engine = get_engine()
         query = f"""
@@ -111,7 +111,7 @@ def get_prices(base_date):
             FROM price_data
             WHERE timestamp >= '{base_date}'
             ORDER BY timestamp ASC
-            LIMIT 100
+            LIMIT {limit}
         """
         df = pd.read_sql(query, engine, parse_dates=['timestamp'])
         df['offset'] = df.apply(lambda x: _get_offset(x['timestamp']), axis=1)

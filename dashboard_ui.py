@@ -35,7 +35,7 @@ sunrise = sunrise.astimezone(tz=pytz.timezone(timezone))
 sunset = sunset.astimezone(tz=pytz.timezone(timezone))
 
 
-prices = get_prices(base_date)
+prices = get_prices(base_date, limit=1000)
 # hardcoding the timezone for now; not supported well in Streamlit currently
 # dropping the tzinfo afterwards; so it's displayed correctly in the Matplotlib plot
 prices = prices[prices['timestamp'] > pd.Timestamp(
