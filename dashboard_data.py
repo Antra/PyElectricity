@@ -2,6 +2,7 @@ import pandas as pd
 from config import get_engine, setup_logger
 from datetime import timedelta
 from sqlalchemy import text
+import pytz
 
 logger = setup_logger('Dashboard Data', level='INFO')
 
@@ -76,7 +77,7 @@ def get_sunrise(base_date):
             f'** Dashboard Data: Error getting sunrise/sunset data from DB! Error message: {err}')
 
 
-def _get_offset(datetime):
+def _get_offset(datetime, tz_info=None):
     """add the price offset for delivery of electricity (incl tax)
     For Radius see: https://radiuselnet.dk/elnetkunder/tariffer-og-netabonnement
     """
@@ -99,7 +100,7 @@ def _get_offset(datetime):
     return offset
 
 
-def get_prices(base_date, limit=100):
+def get_prices(base_date, tz=None, limit=100):
     try:
         engine = get_engine()
         query = f"""
@@ -114,7 +115,12 @@ def get_prices(base_date, limit=100):
             LIMIT {limit}
         """
         df = pd.read_sql(query, engine, parse_dates=['timestamp'])
-        df['offset'] = df.apply(lambda x: _get_offset(x['timestamp']), axis=1)
+        if tz:
+            df['offset'] = df.apply(lambda x: _get_offset(
+                x['timestamp'].astimezone(tz=pytz.timezone(timezone))), axis=1)
+        else:
+            df['offset'] = df.apply(
+                lambda x: _get_offset(x['timestamp']), axis=1)
         return df
 
     except Exception as err:
