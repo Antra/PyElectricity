@@ -100,7 +100,7 @@ def _get_offset(datetime, tz_info=None):
     return offset
 
 
-def get_prices(base_date, tz=None, limit=100):
+def get_prices(base_date, timezone=None, limit=100):
     try:
         engine = get_engine()
         query = f"""
@@ -115,7 +115,7 @@ def get_prices(base_date, tz=None, limit=100):
             LIMIT {limit}
         """
         df = pd.read_sql(query, engine, parse_dates=['timestamp'])
-        if tz:
+        if timezone:
             df['offset'] = df.apply(lambda x: _get_offset(
                 x['timestamp'].astimezone(tz=pytz.timezone(timezone))), axis=1)
         else:
