@@ -16,7 +16,7 @@ logger = setup_logger('Dashboard UI', level='INFO')
 # Get data
 timezone = 'Europe/Copenhagen'
 
-base_date = dt.utcnow().date()
+base_date = dt.now(pytz.timezone(timezone)).date()
 
 battery = get_battery_state()
 battery_pct = battery['battery_state_norm'].values[0]

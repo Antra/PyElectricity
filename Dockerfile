@@ -1,4 +1,4 @@
-FROM python:3.11-slim-bullseye
+FROM python:3.13-slim
 
 # I can pass the environmental files in directly in the Dockerfile even if the password contains special characters; but I can also use the run command from Readme.
 # ENV DB_HOST 192.168.x.x
