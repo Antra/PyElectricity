@@ -1,0 +1,1 @@
+nohup /usr/local/bin/python3 -m streamlit run /app/dashboard_ui.py --browser.gatherUsageStats False >> /app/pyelectricity.log 2>&1 &
