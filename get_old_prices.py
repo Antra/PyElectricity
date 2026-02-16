@@ -15,6 +15,7 @@ tomorrow = dt.now().date() + timedelta(days=+1)
 
 areas = ['DK2']
 currency = 'DKK'
+time_resolution = 15
 prices = elspot.Prices(currency=currency)
 
 # get last two years
@@ -25,8 +26,8 @@ data = []
 for num in range(0, max_days, 1):
     older_days = dt.now().date() + timedelta(days=-num)
 
-    df = pd.DataFrame(data=prices.hourly(
-        areas=areas, end_date=older_days)['areas']['DK2']['values'])
+    df = pd.DataFrame(data=prices.fetch(
+        areas=areas, end_date=older_days, resolution=time_resolution)['areas']['DK2']['values'])
     data.append(df)
 
 
@@ -35,12 +36,16 @@ df = pd.concat(data).sort_values(by='start').drop(
 df = df.replace([np.inf, -np.inf], np.nan).dropna(subset=['price']).drop_duplicates(
     subset=['start'], keep='last').reset_index(drop=True).set_index('start')
 
-
 df['price'] = df['price'] / 1000
-
-
-df['rolling_sum'] = df['price'].rolling(3).sum().shift(-2)
 df['currency'] = currency
+
+# df['rolling_sum'] = df['price'].rolling(3).sum().shift(-2)
+
+# resample to 15 mins
+df = df.resample('15min').ffill()
+rows_in_3h = int(pd.Timedelta('3h') / pd.Timedelta('15min'))  # 12 rows
+df['rolling_sum'] = df['price'].rolling(rows_in_3h).sum() / 4
+df['rolling_sum'] = df['rolling_sum'].shift(-(rows_in_3h-1))
 df[df['rolling_sum'].isna()]
 
 
