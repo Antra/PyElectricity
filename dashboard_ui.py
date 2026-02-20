@@ -4,7 +4,7 @@ from config import setup_logger
 from dashboard_data import get_battery_state, get_solar_prediction, get_sunrise, get_prices
 import plotly.graph_objects as go
 from datetime import datetime as dt
-from datetime import timedelta
+from datetime import timedelta, UTC
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pytz
@@ -31,8 +31,10 @@ solar = get_solar_prediction(base_date).rename(
 
 sunrise, sunset, summary = get_sunrise(base_date)
 # streamlit doesn't handletimezones well; so hardcoding it
-sunrise = sunrise.astimezone(tz=pytz.timezone(timezone))
-sunset = sunset.astimezone(tz=pytz.timezone(timezone))
+sunrise = sunrise.astimezone(tz=pytz.timezone(
+    timezone)).time() if sunrise else 'unknown'
+sunset = sunset.astimezone(tz=pytz.timezone(
+    timezone)).time() if sunset else 'unknown'
 
 
 prices = get_prices(base_date, limit=1000, timezone=timezone)
@@ -56,7 +58,7 @@ price_currency = prices['currency'].values[0]
 st.title('Solar and Weather data')
 
 st.write(
-    f"Today's sunrise was at {sunrise.time()}, and the sun will set at {sunset.time()}.  \nAccording to the weather forecast: {summary}.")
+    f"Today's sunrise was at {sunrise}, and the sun will set at {sunset}.  \nAccording to the weather forecast: {summary}.")
 
 # Battery Gauge - Plotly
 fig = go.Figure(go.Indicator(
@@ -79,7 +81,7 @@ fig.add_annotation(text='battery level compared to 1hr ago<br>at 85% with maximu
                    y=-0.09,
                    bordercolor='black',
                    borderwidth=1)
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, width="stretch")
 
 
 # Solar predictions - Matplotlib
@@ -90,7 +92,7 @@ ax.plot(solar.index, solar['Optimistic'],
         color='green', linewidth=2.0, label='Optimistic')
 ax.plot(solar.index, solar['Pessimistic'],
         color='red', linewidth=2.0, label='Pessimistic')
-ax.axvline(x=dt.utcnow(), color='grey', linestyle='--', label='right now')
+ax.axvline(x=dt.now(UTC), color='grey', linestyle='--', label='right now')
 ax.set_title('Solar production predictions for the next few days')
 ax.set_xlabel('Today and next two days')
 ax.set_ylabel('Estimated solar production (kW)')

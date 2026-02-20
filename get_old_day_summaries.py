@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from datetime import timedelta
+from datetime import timedelta, UTC
 from datetime import datetime as dt
 from config import setup_logger, get_engine
 from sqlalchemy import text
@@ -8,8 +8,9 @@ from sqlalchemy import text
 logger = setup_logger('Computation', level='INFO')
 logger.info('*** PyElectricity: Computation starting ***')
 
-yesterday = dt.utcnow() - timedelta(hours=24)
-now = dt.utcnow()
+now = dt.now(UTC)
+yesterday = now - timedelta(hours=24)
+
 
 data_file = 'production_log.xlsx'
 df = pd.read_excel(data_file, sheet_name='Data', usecols=[
