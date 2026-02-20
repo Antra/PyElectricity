@@ -71,7 +71,10 @@ def get_sunrise(base_date):
         with engine.connect() as conn:
             # wrap query in text() when executing, https://stackoverflow.com/questions/69490450/objectnotexecutableerror-when-executing-any-sql-query-using-asyncengine
             sunrise = conn.execute(text(query)).fetchone()
-            return sunrise
+            if sunrise:
+                return sunrise
+            else:
+                return (None, None, 'No weather data available for today.')
     except Exception as err:
         logger.error(
             f'** Dashboard Data: Error getting sunrise/sunset data from DB! Error message: {err}')
